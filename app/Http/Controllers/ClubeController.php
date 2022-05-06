@@ -21,6 +21,21 @@ class ClubeController extends Controller
     
     public function store(Request $request)
     {
+		
+		$request->validate([
+			"nome" => "required|max:100",
+			"escudo" => "required"
+		], [
+			"nome.required" => "O campo nome é obrigatório.",
+			"nome.max" => "O campo aceita no máximo :max caracteres.",
+			"escudo.required" => "A foto é obrigatória"
+		]);
+		
+		if ($request->get("id") != ""){
+			$clube = Clube::Find($request->get("id"));
+		} else {
+			$clube = new Clube();
+		}
         $clube->nome = $request->get("nome");
         $clube->escudo = $request->get("escudo");
         $clube->save();

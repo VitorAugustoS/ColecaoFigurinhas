@@ -9,23 +9,36 @@
     <br />
 
     <form method="POST" action="/clube" class="row" enctype="multipart/form-data">
+		
+		<div class="form-group col-8">
+		
+			<label for="nome">Nome:</label>
+			<input type="text" id="nome" name="nome" @class([ "form-control", "is-invalid" => ($errors->first("nome") != "") ])/>
 
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" class="form-control"/>
+			<div class="invalid-feedback">
+				{{ $errors->first("nome") }}
+			</div>
+			
+			<label for="escudo">Escudo:</label>
+			<input type="file" id="escudo" name="escudo" @class([ "form-control", "is-invalid" => ($errors->first("escudo") != "") ])/>
+		
+			<div class="invalid-feedback">
+				{{ $errors->first("escudo") }}
+			</div>
+		</div>
+		
+        <div class="form-group col-4">
+			@csrf
+			
+			<input type="hidden" id="id" name="id" value="{{ $clube->id }}" />
+			<a href="/clube" class="btn btn-primary" style="margin-top: 55px; margin-left: 25%;">
+				<i class="bi bi-plus-square"></i> Novo
+			</a>
 
-        <label for="escudo">Escudo:</label>
-        <input type="file" id="escudo" name="escudo" class="form-control"/>
-
-        @csrf
-        <div class="form-group">
-            
+			<button type="submit" class="btn btn-success" style="margin-top: 55px;">
+				<i class="bi bi-save"></i> Salvar
+			</button>
         </div>
-        <input type="hidden" id="id" name="id" value="{{ $clube->id }}" />
-        <a href="/clube" class="btn-primary">
-            <i class="bi bi-plus-square">Novo</i>
-        </a>
-
-        <button type="submit" class="btn btn-success">Salvar</button>
         
     </form>
 
