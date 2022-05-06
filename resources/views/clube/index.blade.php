@@ -13,14 +13,14 @@
 		<div class="form-group col-8">
 		
 			<label for="nome">Nome:</label>
-			<input type="text" id="nome" name="nome" @class([ "form-control", "is-invalid" => ($errors->first("nome") != "") ])/>
+			<input type="text" id="nome" name="nome" @class([ "form-control", "is-invalid" => ($errors->first("nome") != "") ]) value="{{ $clube->nome }}" />
 
 			<div class="invalid-feedback">
 				{{ $errors->first("nome") }}
 			</div>
 			
 			<label for="escudo">Escudo:</label>
-			<input type="file" id="escudo" name="escudo" @class([ "form-control", "is-invalid" => ($errors->first("escudo") != "") ])/>
+			<input type="file" id="escudo" name="escudo" @class([ "form-control", "is-invalid" => ($errors->first("escudo") != "") ]) />
 		
 			<div class="invalid-feedback">
 				{{ $errors->first("escudo") }}
@@ -53,10 +53,10 @@
     <table class="table table-striped">
 
         <colgroup>
-            <col width="25%">
-            <col width="25%">
-            <col width="25%">
-            <col width="25%">
+            <col width="35%">
+            <col width="35%">
+            <col width="15%">
+            <col width="15%">
         </colgroup>
 
         <thead>
@@ -68,13 +68,42 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            @foreach ( $clubes as $clube )
+                <tr>
+                    <td>{{ $clube->nome }}</td>
+                    <td> <img src="{{ str_replace("public/", "storage/", $clube->escudo) }}" style="width: 100px;" /> </td>
+                    <td>
+                        <a href="/clube/{{ $clube->id }}/edit" class="btn btn-warning">
+							<i class="bi bi-pencil-square"></i> Editar
+						</a>
+                    </td>
+                    <td>
+                        <input type="hidden" name="_method" value="DELETE" />
+						<button type="button" class="btn btn-danger" onclick="excluir(this);">
+							<i class="bi bi-trash"></i> Excluir
+						</button>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
 
 @endsection
+
+<script>
+	function excluir(btn) {
+		Swal.fire({
+			"title": "Deseja realmente excluir?",
+			"icon": "warning",
+			"showCancelButton": true,
+			"confirmButtonColor": "#3085d6",
+			"cancelButtonColor": "#d33",
+			"cancelButtonText": "Cancelar",
+			"confirmButtonText": "Confirmar"
+		}).then(function(result){
+			if (result.isConfirmed) {
+				$(btn).parents("form").submit();
+			}
+		});
+	}
+</script>

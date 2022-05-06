@@ -26,9 +26,9 @@ class ClubeController extends Controller
 			"nome" => "required|max:100",
 			"escudo" => "required"
 		], [
-			"nome.required" => "O campo nome é obrigatório.",
+			"nome.required" => "O campo é obrigatório.",
 			"nome.max" => "O campo aceita no máximo :max caracteres.",
-			"escudo.required" => "A foto é obrigatória"
+			"escudo.required" => "A foto é obrigatória."
 		]);
 		
 		if ($request->get("id") != ""){
@@ -37,7 +37,11 @@ class ClubeController extends Controller
 			$clube = new Clube();
 		}
         $clube->nome = $request->get("nome");
-        $clube->escudo = $request->get("escudo");
+        
+        if ($request->file("escudo") != null){
+            $clube->escudo = $request->file("escudo")->store("public/clubes");
+        }
+
         $clube->save();
 
         return redirect("/clube");
@@ -59,5 +63,6 @@ class ClubeController extends Controller
     public function destroy($id)
     {
         Clube::Destroy($id);
+        return redirect("/clube");
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Posicao;
 
 class PosicaoController extends Controller
 {
@@ -13,72 +14,53 @@ class PosicaoController extends Controller
      */
     public function index()
     {
-        //
+        $posicao = new Posicao();
+        $posicaos = Posicao::All();
+
+        return view("posicao.index", [
+            "posicao" => $posicao,
+            "posicaos" => $posicaos
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        
+        $request->validate([
+            "nome" => "required|max:100"
+        ], [
+            "nome.required" => "O campo é obrigatório.",
+            "nome.max" =>"O campo aceita no máximo :max caracteres."
+        ]);
+
+        if ($request->get("id") != ""){
+			$posicao = Posicao::Find($request->get("id"));
+		} else {
+			$posicao = new Posicao();
+		}
+        $posicao->nome = $request->get("nome");
+        $posicao->save();
+
+        return redirect("/posicao");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
-        //
+        $posicao = Posicao::Find($id);
+        $posicaos = Posicao::All();
+
+        return view("posicao.index", [
+            "posicao" => $posicao,
+            "posicaos" => $posicaos
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
-        //
+        Posicao::Destroy($id);
+        return redirect("/posicao");
     }
 }
